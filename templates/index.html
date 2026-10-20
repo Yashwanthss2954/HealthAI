@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#176458">
+  <title>HealthAI | A little clarity, a better next step</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="HealthAI home"><span class="brand-mark" aria-hidden="true">+</span>Health<span>AI</span></a>
+    <span class="header-label">A little clarity. A better next step.</span>
+    <span class="private-label"><span class="status-dot"></span> Your health, your space</span>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <div class="eyebrow"><span class="small-cross" aria-hidden="true">+</span> YOUR PERSONAL HEALTH COMPANION</div>
+        <h1 id="page-title">Let's make sense of<br>how you're feeling.</h1>
+        <p>A starting point for your symptoms.<br> Thoughtful insights to help you take your next step.</p>
+      </div>
+      <div class="intro-image">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1000&q=85" alt="Sunlight reaching a quiet green forest path" width="1000" height="667">
+        <div class="image-caption"><span class="caption-dot"></span> A moment for your wellbeing.</div>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <section class="symptom-panel" aria-labelledby="symptom-title">
+        <div class="section-heading"><span class="step-number">01</span><span>CHECK IN WITH YOURSELF</span></div>
+        <h2 id="symptom-title">What's on your mind?</h2>
+        <p class="section-description">Tell us what you're experiencing, in your own words.</p>
+        <form id="symptom-form" novalidate>
+          <label for="symptoms">Your symptoms</label>
+          <div class="textarea-wrap">
+            <textarea id="symptoms" name="symptoms" rows="5" placeholder="e.g. I've had a sore throat, a runny nose, and a mild headache since yesterday." aria-describedby="input-hint character-count form-error"></textarea>
+            <span id="character-count">0 / 200</span>
+          </div>
+          <p class="input-hint" id="input-hint">Include how you feel and when it started. Leave out personal details.</p>
+          <div class="suggestions" aria-label="Example symptoms">
+            <span>Try an example</span>
+            <button type="button" data-example="I've had a headache and felt tired since yesterday.">Headache &amp; fatigue <span aria-hidden="true">&#8599;</span></button>
+            <button type="button" data-example="I've had a sore throat and runny nose for two days.">Cold symptoms <span aria-hidden="true">&#8599;</span></button>
+          </div>
+          <label class="consent"><input type="checkbox" id="consent"><span>I agree to send these symptoms to {{ provider_name }} for an AI-generated assessment.</span></label>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+          <button class="primary-button" id="submit-button" type="submit"><span id="submit-label">Explore possible causes</span><span aria-hidden="true">&#8594;</span></button>
+          <p class="provider-status"><span class="status-dot {{ 'connected' if configured else 'demo-dot' }}"></span>{{ 'AI provider configured' if configured else 'Preview mode' }}<span class="status-divider">/</span>{{ 'Powered by ' ~ provider_name if configured else 'Live AI needs provider credentials' }}</p>
+        </form>
+        <div class="privacy-note"><span class="privacy-icon" aria-hidden="true">&#9671;</span><div><strong>Personal by nature. Private by choice.</strong><p>No account needed. No saved history on this server.<br>Reports only download when you choose to save.</p></div></div>
+      </section>
+
+      <section class="insight-panel" aria-label="Your health insights" aria-busy="false">
+        <div class="insight-heading"><div class="section-heading"><span class="step-number">02</span><span>A LITTLE MORE UNDERSTANDING</span></div><span class="insight-badge">Health insights</span></div>
+        <div id="empty-state">
+          <div class="empty-visual" aria-hidden="true"><span class="visual-line"></span><span class="visual-plus">+</span><span class="visual-line"></span></div>
+          <h2 id="insight-title">Clarity starts with a check-in.</h2>
+          <p>Share what's been bothering you.<br>Your possible causes and next steps will appear here.</p>
+          <button class="sample-button" type="button" id="sample-button">Take a look at a sample report <span aria-hidden="true">&#8594;</span></button>
+          <div class="insight-features"><div><span>01</span>Possible causes</div><div><span>02</span>Practical next steps</div><div><span>03</span>A report to keep</div></div>
+        </div>
+        <div id="loading-state" role="status" hidden><span class="loading-spinner"></span><h2>Making sense of your symptoms</h2><p>This can take a few moments. Please don't delay urgent care.</p></div>
+        <div id="results" hidden>
+          <div class="result-top"><h2>Your health insights</h2><span id="result-label" class="result-label"></span></div>
+          <div class="reported-symptoms"><span>YOU SHARED</span><p id="reported-symptoms"></p></div>
+          <div id="urgent-alert" class="urgent-alert" role="alert" hidden><strong>Please seek urgent medical care.</strong><p>These symptoms may need immediate attention. Contact your local emergency services now if you may be in danger.</p></div>
+          <p class="result-intro">Possible explanations, not a diagnosis. These are not ranked by likelihood.</p>
+          <div id="conditions"></div>
+          <div class="next-steps"><h3>Your next step</h3><p id="next-steps"></p></div>
+          <div class="report-actions"><button type="button" id="save-button" class="save-button">Save report <span aria-hidden="true">&#8595;</span></button><span id="save-status" role="status">Downloads as a text file</span></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="safety-note"><span class="safety-symbol" aria-hidden="true">!</span><p><strong>A guide, not a diagnosis.</strong> HealthAI is an educational tool, not a substitute for professional medical advice. For chest pain, trouble breathing, stroke signs, or other severe symptoms, contact emergency services immediately.</p></aside>
+  </main>
+  <footer><a class="brand footer-brand" href="/">Health<span>AI</span></a><span>A thoughtful first step. Always human care next.</span><span>Educational use only</span></footer>
+</body>
+</html>
